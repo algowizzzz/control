@@ -1,8 +1,8 @@
 from langchain.tools import Tool, tool
 from langchain.chains import LLMChain
 from langchain_anthropic import ChatAnthropic
-from .data_loader import filter_controls as actual_filter_controls
-from . import prompts
+from data_loader import filter_controls as actual_filter_controls
+import prompts
 import os
 import json
 

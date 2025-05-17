@@ -1,6 +1,7 @@
 import os
 import sys
 from dotenv import load_dotenv
+import datetime
 
 # Ensure the src directory is in the Python path
 # This allows us to import modules from the src directory as a package
@@ -36,16 +37,7 @@ else:
 
 # --- Import Agent ---
 # Now that sys.path is set, we can import the agent
-# Use a more robust way to ensure agent can be imported
-try:
-    from ..agent import agent # Changed to relative import
-except ImportError as e:
-    print(f"Error importing agent: {e}")
-    print("Ensure agent.py is in the src directory and src is in PYTHONPATH.")
-    sys.exit(1)
-except Exception as e:
-    print(f"An unexpected error occurred during agent import: {e}")
-    sys.exit(1)
+import agent
 
 # --- Sample "Real" Control Data ---
 REAL_CONTROLS_DATA = [
@@ -84,42 +76,54 @@ REAL_CONTROLS_DATA = [
 def main():
     print("--- Starting Real Data Control Review Agent Scenarios ---")
 
-    # Scenario 1: Single 5W review on a real control
-    print("\n=======================================")
-    print("Scenario 1: Single 5W review (Real Data)")
-    print("=======================================\n")
-    if REAL_CONTROLS_DATA:
-        control_to_review_single = REAL_CONTROLS_DATA[0]
-        print(f"Reviewing control: {control_to_review_single['control_id']}\n")
-        try:
-            response = agent.run(
-                f"Review control {control_to_review_single['control_id']} using 5W. Here is the control data: {control_to_review_single}"
-            )
-            print(f"5W for {control_to_review_single['control_id']}: \n{response}\n")
-        except Exception as e:
-            print(f"Error during single 5W review (Real Data): {e}")
-    else:
-        print("No real controls data to run Scenario 1.")
+    # Prepare output file
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    output_path = os.path.join(current_dir, f"real_data_run_output_{timestamp}.txt")
+    with open(output_path, "w") as f:
+        f.write(f"Real Data Control Review Agent Run - {timestamp}\n\n")
 
-    # Scenario 2: Batch review (5W, OE, DE) on real controls
-    print("\n===================================================")
-    print("Scenario 2: Batch review (5W, OE, DE) (Real Data)")
-    print("===================================================\n")
-    if len(REAL_CONTROLS_DATA) >= 2:
-        controls_for_batch = REAL_CONTROLS_DATA[:2]
-        ids_for_batch = [c['control_id'] for c in controls_for_batch]
-        print(f"Reviewing controls: {ids_for_batch}\n")
-        try:
-            response = agent.run(
-                f"Review controls with IDs {ids_for_batch} using 5W, OE, and DE. Here is the control data: {controls_for_batch}"
-            )
-            print(f"Batch review for {ids_for_batch}: \n{response}\n")
-        except Exception as e:
-            print(f"Error during batch review (Real Data): {e}")
-    else:
-        print("Not enough real controls data to run Scenario 2 (need at least 2).")
-    
-    print("\n--- Real Data Control Review Agent Scenarios Complete ---")
+        # Scenario 1: Single 5W review on a real control
+        print("\n=======================================")
+        print("Scenario 1: Single 5W review (Real Data)")
+        print("=======================================\n")
+        if REAL_CONTROLS_DATA:
+            control_to_review_single = REAL_CONTROLS_DATA[0]
+            query1 = f"Review control {control_to_review_single['control_id']} using 5W. Here is the control data: {control_to_review_single}"
+            print(f"Reviewing control: {control_to_review_single['control_id']}\n")
+            try:
+                response1 = agent.agent.run(query1)
+                print(f"5W for {control_to_review_single['control_id']}: \n{response1}\n")
+                f.write("--- Scenario 1: Single 5W Review ---\n")
+                f.write(f"Query:\n{query1}\n\nResponse:\n{response1}\n\n")
+            except Exception as e:
+                print(f"Error during single 5W review (Real Data): {e}")
+                f.write(f"Error during single 5W review: {e}\n\n")
+        else:
+            print("No real controls data to run Scenario 1.")
+            f.write("No real controls data to run Scenario 1.\n\n")
+
+        # Scenario 2: Batch review (5W, OE, DE) on real controls
+        print("\n===================================================")
+        print("Scenario 2: Batch review (5W, OE, DE) (Real Data)")
+        print("===================================================\n")
+        if len(REAL_CONTROLS_DATA) >= 2:
+            controls_for_batch = REAL_CONTROLS_DATA[:2]
+            ids_for_batch = [c['control_id'] for c in controls_for_batch]
+            query2 = f"Review controls with IDs {ids_for_batch} using 5W, OE, and DE. Here is the control data: {controls_for_batch}"
+            print(f"Reviewing controls: {ids_for_batch}\n")
+            try:
+                response2 = agent.agent.run(query2)
+                print(f"Batch review for {ids_for_batch}: \n{response2}\n")
+                f.write("--- Scenario 2: Batch Review (5W, OE, DE) ---\n")
+                f.write(f"Query:\n{query2}\n\nResponse:\n{response2}\n\n")
+            except Exception as e:
+                print(f"Error during batch review (Real Data): {e}")
+                f.write(f"Error during batch review: {e}\n\n")
+        else:
+            print("Not enough real controls data to run Scenario 2 (need at least 2).")
+            f.write("Not enough real controls data to run Scenario 2 (need at least 2).\n\n")
+        
+        print(f"\n--- Real Data Control Review Agent Scenarios Complete ---\nOutput saved to: {output_path}\n")
 
 if __name__ == "__main__":
     main() 

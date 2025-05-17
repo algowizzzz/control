@@ -8,7 +8,7 @@ from langchain.agents.output_parsers.openai_tools import OpenAIToolsAgentOutputP
 # from langchain_core.output_parsers.json import JsonOutputToolsParser 
 # from langchain.tools.render import render_text_description_and_args # No longer rendering tools in system message
 
-from .tools import TOOLS, MODEL_NAME, TEMPERATURE, MAX_TOKENS # Import LLM config too
+from tools import TOOLS, MODEL_NAME, TEMPERATURE, MAX_TOKENS # Import LLM config too
 import os # Import os
 
 # Explicitly get API key for ChatAnthropic

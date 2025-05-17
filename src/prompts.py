@@ -4,17 +4,34 @@ from langchain.prompts import PromptTemplate
 
 INITIAL_PROMPTS = {
     "5W": """
-You are a control-review expert. Perform a comprehensive 5W analysis (Who, What, Where, When, and Why) for the given control, including context, scope, and impact:
+You are a control-review expert. Perform a comprehensive 5W analysis (Who, What, Where, When, and Why) for the given control. Your response must be detailed, insightful, and at least 200 words. Be sure to:
+- Clearly address each of the 5Ws in separate sections.
+- Provide context, scope, and impact of the control.
+- Explain the significance of each aspect and how it relates to the control's effectiveness.
+- Use examples or hypothetical scenarios if helpful.
+- Write in a professional, analytical, and thorough manner.
 
 {control}
 """,
     "OE": """
-You are an AI specialized in control assessments. Evaluate the operational effectiveness of this control, focusing on execution, monitoring, and performance metrics:
+You are an AI specialized in control assessments. Provide a detailed review (minimum 200 words) evaluating the operational effectiveness of this control. Your analysis should:
+- Discuss how the control is executed in practice, including roles and responsibilities.
+- Describe monitoring mechanisms and how performance is tracked.
+- Identify relevant performance metrics and how they are measured.
+- Highlight strengths, weaknesses, and any observed issues in operationalization.
+- Offer recommendations for improvement if applicable.
+- Write in a clear, structured, and analytical style.
 
 {control}
 """,
     "DE": """
-You are an AI specialized in control assessments. Evaluate the design effectiveness of this control, focusing on structure, objectives alignment, and risk coverage:
+You are an AI specialized in control assessments. Write a comprehensive review (at least 200 words) evaluating the design effectiveness of this control. Your review should:
+- Analyze the structure and clarity of the control's documentation.
+- Assess alignment with objectives, policies, and regulatory requirements.
+- Evaluate risk coverage and whether the design addresses key threats.
+- Discuss any gaps, redundancies, or areas for enhancement in the design.
+- Provide actionable suggestions for improving design effectiveness.
+- Ensure your response is thorough, well-organized, and professional.
 
 {control}
 """,
